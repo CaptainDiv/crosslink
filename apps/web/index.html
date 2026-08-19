@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crosslink — Linkability Meter</title>
+  </head>
+  <body>
+    <main class="page">
+      <header>
+        <h1>Linkability Meter</h1>
+        <p class="tagline">
+          Read-only. Scores a pending USDC payout against the live
+          <a
+            href="https://voyager.online/contract/0x040337b1af3c663e86e333bab5a4b28da8d4652a15a69beee2b677776ffe812a"
+            target="_blank"
+            rel="noopener noreferrer"
+            >STRK20 mainnet pool</a
+          >
+          — and says so when privacy would be fake.
+        </p>
+      </header>
+
+      <section id="pool-stats" class="pool-stats" aria-live="polite">
+        <p>Loading live pool data…</p>
+      </section>
+
+      <form id="score-form" class="score-form">
+        <label>
+          Amount to send (USDC)
+          <input id="amount-input" type="number" min="0" step="0.01" value="10" required />
+        </label>
+        <label>
+          Funded my balance at (optional)
+          <input id="funded-at-input" type="datetime-local" />
+        </label>
+        <button type="submit">Score this send</button>
+      </form>
+
+      <section id="result" aria-live="polite"></section>
+
+      <footer>
+        <p>
+          Deposits, withdrawals, timing and open-note amounts are public. This meter reads only
+          that public data — no wallet, no SDK, no proving. Channel freshness is a pool-wide
+          proxy, not a read of any specific channel; that needs a connected wallet.
+          Apache-2.0. Built for the STRK20 Private Sprint.
+        </p>
+      </footer>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "name": "@crosslink/web",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@crosslink/meter": "*",
+    "starknet": "next"
+  },
+  "devDependencies": {
+    "vite": "^6.0.0"
+  }
+}
