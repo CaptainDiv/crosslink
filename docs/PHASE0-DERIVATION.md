@@ -124,3 +124,5 @@ determinism guarantee, or no `signMessage` at all). Those users need
 explicit Starknet wallet connect regardless of anything Crosslink does on
 the derivation side. This is a scope boundary to carry into Phase 1, not a
 gap in Phase 0's result.
+
+Phantom verified, address stable across repeat signings, Solflare untested (derivation paths differ by default)
