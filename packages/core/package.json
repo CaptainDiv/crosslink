@@ -1,0 +1,18 @@
+{
+  "name": "@crosslink/core",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "node --test",
+    "harness": "node scripts/serve-harness.mjs",
+    "spike:determinism": "node --experimental-strip-types scripts/determinism.mts",
+    "verify:class-hash": "node --experimental-strip-types scripts/verify-class-hash.mts"
+  },
+  "dependencies": {
+    "@noble/curves": "^1.7.0",
+    "@noble/hashes": "^1.6.1",
+    "starknet": "next"
+  }
+}
