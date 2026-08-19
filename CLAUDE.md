@@ -134,6 +134,16 @@ If a task seems to need something on this list, **stop and ask**.
 
 ---
 
+## Commit discipline
+
+After completing any working unit — a passing test, a deployed contract, a
+fixed bug — commit AND push immediately. Never batch. The repository is scraped
+every 30 minutes and visible progress is part of the score.
+
+Update strk20.json in the same commit as any transaction or deployment.
+
+---
+
 ## Code conventions
 
 - TypeScript strict. No `any`.
