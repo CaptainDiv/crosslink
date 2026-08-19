@@ -102,11 +102,32 @@ NEAR's traction (42% of near.com volume chose confidential mode within weeks) va
 ### 6.1 Payer onboarding (one-time, invisible)
 
 1. Alice connects her existing wallet (Phantom, MetaMask, etc.).
-2. She signs one versioned message: `Crosslink account derivation — v1`. No gas, no transaction.
+2. She signs one versioned message:
+   ```
+   Crosslink account derivation v1
+   domain: crosslink.app
+   ```
+   No gas, no transaction. Domain-bound and plain ASCII (see Phase 0 amendment
+   below) — no em dash, no `\r`, so the string can't be silently mistyped or
+   normalization-mangled across platforms.
 3. The signature seeds a Starknet private key and a viewing key. Nothing is persisted except, optionally, the read-only viewing key.
 4. Her Starknet address is computed counterfactually and shown. No contract deployed yet.
 
 She never sees the word "Starknet," a seed phrase, or an STRK balance.
+
+**Phase 0 amendment to the derivation message.** The original string
+(`Crosslink account derivation — v1`) was fixed and public, so any site could
+prompt a user to sign it — and that signature seeds the spending key. Binding
+the origin (`domain: crosslink.app`) makes a fraudulent request legible to a
+user reading the prompt: a phishing site would have to display a domain line
+that contradicts its own URL. This does not close the vector — no wallet
+enforces the claim, so a malicious site can still request these exact bytes —
+it only narrows "any site can silently reuse a generic string" down to "a site
+must contradict itself to the user." SIWS / wallet-enforced origin binding is
+the honest fix, tracked as a Phase 1 follow-up. The message was also changed
+to plain ASCII: the em dash (U+2014) is three UTF-8 bytes with NFC/NFD
+normalization risk and the hazard of being retyped as a hyphen, both of which
+would silently relocate every derived address.
 
 ### 6.2 Funding (deliberate, ahead of time)
 
