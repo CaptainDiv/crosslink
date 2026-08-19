@@ -10,7 +10,11 @@ Also shipping a **Linkability Meter**: a read-only tool that scores a pending
 payout on amount uniqueness, timing correlation and pool depth — and blocks the
 send when privacy would be fake.
 
+**Live: [captaindiv.github.io/crosslink](https://captaindiv.github.io/crosslink/)**
+— reads the live mainnet pool directly via RPC, no wallet or backend involved.
+
 Built for the STRK20 Private Sprint. Apache-2.0.
 
 ## Status
-Pre-build. See `docs/PRD.md`.
+Linkability Meter live on mainnet (`packages/meter`, `apps/web`). Everything
+else — derivation, corridor, anonymizer contract — pre-build. See `docs/PRD.md`.
