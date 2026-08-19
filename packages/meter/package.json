@@ -1,0 +1,14 @@
+{
+  "name": "@crosslink/meter",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "node --test",
+    "live-check": "node --experimental-strip-types scripts/live-check.mts"
+  },
+  "dependencies": {
+    "starknet": "next"
+  }
+}
