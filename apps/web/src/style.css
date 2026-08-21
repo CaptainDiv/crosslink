@@ -335,3 +335,119 @@ footer {
 .tx-log a {
   color: var(--accent);
 }
+
+.amount-label,
+.depth-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  max-width: 320px;
+  margin-bottom: 0.75rem;
+}
+
+.amount-label input[type="number"] {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.65rem;
+  color: var(--text);
+  font-size: 1rem;
+}
+
+.depth-label {
+  max-width: none;
+}
+
+.depth-label input[type="range"] {
+  accent-color: var(--accent);
+  width: 100%;
+}
+
+#depth-readout {
+  color: var(--text);
+  font-weight: 700;
+}
+
+.explorer-section {
+  border-color: var(--flagged);
+}
+
+.hypothetical-tag {
+  display: inline-block;
+  background: color-mix(in srgb, var(--flagged) 20%, transparent);
+  color: var(--flagged);
+  border-radius: 0.35rem;
+  padding: 0.1rem 0.5rem;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  vertical-align: middle;
+  margin-left: 0.5rem;
+}
+
+.demo-columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.demo-column {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+}
+
+.demo-column--public {
+  border-color: var(--flagged);
+}
+
+.demo-column--private {
+  border-color: var(--clear);
+}
+
+.demo-column h2 {
+  margin-top: 0;
+  font-size: 1.1rem;
+}
+
+.demo-field {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9rem;
+}
+
+.demo-field:last-child {
+  border-bottom: none;
+}
+
+.demo-field-label {
+  color: var(--text-dim);
+}
+
+.demo-field-value {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  text-align: right;
+}
+
+.demo-redacted {
+  color: var(--text-dim);
+  font-style: italic;
+}
+
+.hash-badge {
+  display: inline-block;
+  background: color-mix(in srgb, var(--not-evaluated) 30%, transparent);
+  color: var(--text-dim);
+  border-radius: 0.35rem;
+  padding: 0.1rem 0.5rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
