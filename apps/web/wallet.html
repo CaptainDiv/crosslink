@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crosslink — Wallet API integration test</title>
+  </head>
+  <body>
+    <main class="page">
+      <header>
+        <h1>Wallet API integration test</h1>
+        <p class="tagline">
+          Talks to a connected privacy-enabled wallet (Ready) via starknet.js
+          <code>WalletAccountV6</code> against the live
+          <a
+            href="https://voyager.online/contract/0x040337b1af3c663e86e333bab5a4b28da8d4652a15a69beee2b677776ffe812a"
+            target="_blank"
+            rel="noopener noreferrer"
+            >STRK20 mainnet pool</a
+          >.
+        </p>
+        <p class="warning-banner">
+          Experimental — mainnet, real funds. Test with small amounts only.
+        </p>
+      </header>
+
+      <section id="connect-section" class="wallet-section">
+        <h2>1. Connect wallet</h2>
+        <div id="wallet-list"><p>Detecting wallets…</p></div>
+        <p id="connect-status" class="status-line"></p>
+      </section>
+
+      <section id="shield-section" class="wallet-section" hidden>
+        <h2>2. Shield (deposit into the pool)</h2>
+        <p class="section-note">
+          A shield is two on-chain steps — ERC-20 <code>approve</code> then deposit —
+          so the wallet may prompt twice. The very first shield may prompt once more
+          to auto-register your viewing key.
+        </p>
+        <form id="shield-form" class="wallet-form">
+          <label>
+            Amount to shield (USDC)
+            <input id="shield-amount" type="number" min="0" step="0.01" value="10" required />
+          </label>
+          <div id="shield-round-warning" class="round-warning" hidden></div>
+          <div class="button-row">
+            <button type="button" id="shield-dry-run">Dry run</button>
+            <button type="submit" id="shield-submit" disabled>Shield</button>
+          </div>
+        </form>
+        <div id="shield-preview" class="preview"></div>
+      </section>
+
+      <section id="transfer-section" class="wallet-section" hidden>
+        <h2>3. Private transfer</h2>
+        <form id="transfer-form" class="wallet-form">
+          <label>
+            Recipient address
+            <input id="transfer-recipient" type="text" required />
+          </label>
+          <label>
+            Amount to send (USDC)
+            <input id="transfer-amount" type="number" min="0" step="0.01" value="1" required />
+          </label>
+          <div class="button-row">
+            <button type="button" id="transfer-score">Score this send</button>
+          </div>
+        </form>
+        <div id="transfer-verdict"></div>
+        <div class="button-row">
+          <button type="button" id="transfer-dry-run" disabled>Dry run</button>
+          <button type="button" id="transfer-submit" disabled>Send</button>
+          <button type="button" id="transfer-send-anyway" hidden>Send anyway</button>
+        </div>
+        <div id="transfer-preview" class="preview"></div>
+      </section>
+
+      <section id="log-section" class="wallet-section">
+        <h2>Transaction log</h2>
+        <div class="button-row">
+          <button type="button" id="log-download">Download log</button>
+          <button type="button" id="log-clear">Clear log</button>
+        </div>
+        <ul id="tx-log" class="tx-log"></ul>
+      </section>
+
+      <footer>
+        <p>
+          Deposits, withdrawals, timing and open-note amounts are public. Private
+          transfers have no public leg. This page submits real mainnet transactions
+          through your connected wallet — it never sees your viewing key.
+          Apache-2.0. Built for the STRK20 Private Sprint.
+        </p>
+      </footer>
+    </main>
+    <script type="module" src="/src/wallet.ts"></script>
+  </body>
+</html>
