@@ -30,12 +30,34 @@
         <p id="connect-status" class="status-line"></p>
       </section>
 
+      <section id="register-section" class="wallet-section" hidden>
+        <h2>2. Register</h2>
+        <p class="section-note">
+          Registration publishes your viewing key on-chain and is required before any
+          private action. There is no free-standing register call in the wallet API —
+          it only happens bundled into a real deposit, so this step submits a small
+          deposit purely to trigger it.
+        </p>
+        <p id="register-status" class="status-line">Checking registration status…</p>
+        <form id="register-form" class="wallet-form">
+          <label>
+            Registration deposit (USDC)
+            <input id="register-amount" type="number" min="0" step="0.01" value="0.10" required />
+          </label>
+          <div class="button-row">
+            <button type="button" id="register-dry-run">Dry run</button>
+            <button type="submit" id="register-submit" disabled>Register</button>
+          </div>
+        </form>
+        <div id="register-preview" class="preview"></div>
+      </section>
+
       <section id="shield-section" class="wallet-section" hidden>
-        <h2>2. Shield (deposit into the pool)</h2>
+        <h2>3. Shield (deposit into the pool)</h2>
         <p class="section-note">
           A shield is two on-chain steps — ERC-20 <code>approve</code> then deposit —
-          so the wallet may prompt twice. The very first shield may prompt once more
-          to auto-register your viewing key.
+          so the wallet may prompt twice. If this fails with NOT_REGISTERED, register
+          first using the step above.
         </p>
         <form id="shield-form" class="wallet-form">
           <label>
@@ -52,7 +74,7 @@
       </section>
 
       <section id="transfer-section" class="wallet-section" hidden>
-        <h2>3. Private transfer</h2>
+        <h2>4. Private transfer</h2>
         <form id="transfer-form" class="wallet-form">
           <label>
             Recipient address

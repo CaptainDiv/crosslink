@@ -97,6 +97,40 @@ function downloadLog(): void {
 
 let connectedAccount: WalletAccountV6 | null = null;
 
+/**
+ * There is no read-only "am I registered" call in the wallet API. This
+ * probes with the same dry-run the Register step itself uses and reads the
+ * error shape — the SDK-side docs recommend matching "not registered" /
+ * "viewing key" substrings to distinguish this from an RPC error, since the
+ * wallet API documents no typed error for it either.
+ */
+function looksUnregistered(error: unknown): boolean {
+  const message = error instanceof Error ? error.message : String(error);
+  return /not[_ ]?registered|NOT_REGISTERED|viewing key/i.test(message);
+}
+
+async function refreshRegistrationStatus(): Promise<boolean | null> {
+  const registerStatusEl = document.getElementById("register-status") as HTMLElement;
+  const connectStatusEl = document.getElementById("connect-status") as HTMLElement;
+  if (!connectedAccount) return null;
+  const registerAmountInput = document.getElementById("register-amount") as HTMLInputElement;
+  try {
+    await connectedAccount.strk20PrepareInvoke(buildDepositAction(registerAmountInput), true);
+    registerStatusEl.textContent = "Registered.";
+    connectStatusEl.textContent = `Connected: ${connectedAccount.address} (registered)`;
+    return true;
+  } catch (error) {
+    if (looksUnregistered(error)) {
+      registerStatusEl.textContent = "Not registered yet — submit below to register.";
+      connectStatusEl.textContent = `Connected: ${connectedAccount.address} (not registered)`;
+      return false;
+    }
+    registerStatusEl.textContent =
+      `Could not determine registration status: ${error instanceof Error ? error.message : String(error)}`;
+    return null;
+  }
+}
+
 async function connectWallet(wallet: WalletWithStarknetFeatures): Promise<void> {
   const statusEl = document.getElementById("connect-status") as HTMLElement;
   statusEl.textContent = `Checking ${wallet.name}'s STRK20 support…`;
@@ -110,10 +144,12 @@ async function connectWallet(wallet: WalletWithStarknetFeatures): Promise<void> 
     statusEl.textContent = `Connecting to ${wallet.name}…`;
     connectedAccount = await WalletAccountV6.connect(createProvider(), wallet);
     statusEl.textContent = `Connected: ${connectedAccount.address}`;
+    (document.getElementById("register-section") as HTMLElement).hidden = false;
     (document.getElementById("shield-section") as HTMLElement).hidden = false;
     (document.getElementById("transfer-section") as HTMLElement).hidden = false;
     (document.getElementById("transfer-recipient") as HTMLInputElement).value =
       connectedAccount.address;
+    await refreshRegistrationStatus();
   } catch (error) {
     statusEl.textContent = `Connect failed: ${error instanceof Error ? error.message : String(error)}`;
   }
@@ -137,12 +173,72 @@ async function renderWalletList(): Promise<void> {
   }
 }
 
-// --- shield ---
+// --- shared deposit builder (register and shield are both plain deposits —
+// there is no separate register action; see refreshRegistrationStatus above) ---
 
-function buildShieldActions(amountInput: HTMLInputElement): STRK20_ACTION[] {
+function buildDepositAction(amountInput: HTMLInputElement): STRK20_ACTION[] {
   const amount = parseUsdc(amountInput.value || "0");
   return [{ type: "deposit", token: USDC_TOKEN_HEX, amount: toHex(amount) }];
 }
+
+// --- register ---
+
+function wireRegisterForm(): void {
+  const form = document.getElementById("register-form") as HTMLFormElement;
+  const amountInput = document.getElementById("register-amount") as HTMLInputElement;
+  const dryRunBtn = document.getElementById("register-dry-run") as HTMLButtonElement;
+  const submitBtn = document.getElementById("register-submit") as HTMLButtonElement;
+  const previewEl = document.getElementById("register-preview") as HTMLElement;
+
+  dryRunBtn.addEventListener("click", () => {
+    void (async () => {
+      if (!connectedAccount) return;
+      previewEl.textContent = "Building dry-run proof…";
+      try {
+        const { call, proof } = await connectedAccount.strk20PrepareInvoke(
+          buildDepositAction(amountInput),
+          true,
+        );
+        previewEl.textContent =
+          `Dry run OK. Call entrypoint: ${call.entrypoint}. Proof facts: ${proof.proof_facts.length}.`;
+        submitBtn.disabled = false;
+      } catch (error) {
+        if (looksUnregistered(error)) {
+          previewEl.textContent =
+            "Dry run reports not registered — expected before your first registration. Submit below.";
+          submitBtn.disabled = false;
+        } else {
+          previewEl.textContent = `Dry run failed: ${error instanceof Error ? error.message : String(error)}`;
+          submitBtn.disabled = true;
+        }
+      }
+    })();
+  });
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    void (async () => {
+      if (!connectedAccount) return;
+      previewEl.textContent = "Submitting registration deposit…";
+      try {
+        const { transaction_hash } = await connectedAccount.strk20InvokeTransaction(
+          buildDepositAction(amountInput),
+        );
+        previewEl.textContent = `Submitted: ${transaction_hash}`;
+        appendLog({
+          step: "register",
+          detail: `${amountInput.value} USDC registration deposit`,
+          txHash: transaction_hash,
+        });
+        await refreshRegistrationStatus();
+      } catch (error) {
+        previewEl.textContent = `Register failed: ${error instanceof Error ? error.message : String(error)}`;
+      }
+    })();
+  });
+}
+
+// --- shield ---
 
 function wireShieldForm(): void {
   const form = document.getElementById("shield-form") as HTMLFormElement;
@@ -166,7 +262,7 @@ function wireShieldForm(): void {
       previewEl.textContent = "Building dry-run proof…";
       try {
         const { call, proof } = await connectedAccount.strk20PrepareInvoke(
-          buildShieldActions(amountInput),
+          buildDepositAction(amountInput),
           true,
         );
         previewEl.textContent =
@@ -187,7 +283,7 @@ function wireShieldForm(): void {
       previewEl.textContent = "Submitting shield (may prompt more than once)…";
       try {
         const { transaction_hash } = await connectedAccount.strk20InvokeTransaction(
-          buildShieldActions(amountInput),
+          buildDepositAction(amountInput),
         );
         previewEl.textContent = `Submitted: ${transaction_hash}`;
         appendLog({
@@ -309,6 +405,7 @@ renderLog();
   renderLog();
 });
 
+wireRegisterForm();
 wireShieldForm();
 wireTransferForm();
 renderWalletList().catch((error: unknown) => {
