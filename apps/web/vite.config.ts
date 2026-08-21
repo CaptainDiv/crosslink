@@ -1,3 +1,4 @@
+import { resolve } from "node:path";
 import { defineConfig } from "vite";
 
 // GitHub Pages serves a project site (not a custom domain) at
@@ -5,4 +6,12 @@ import { defineConfig } from "vite";
 // prefix, or every asset URL resolves relative to the domain root instead.
 export default defineConfig({
   base: "/crosslink/",
+  build: {
+    rollupOptions: {
+      input: {
+        main: resolve(__dirname, "index.html"),
+        wallet: resolve(__dirname, "wallet.html"),
+      },
+    },
+  },
 });

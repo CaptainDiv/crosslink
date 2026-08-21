@@ -11,6 +11,9 @@
   },
   "dependencies": {
     "@crosslink/meter": "*",
+    "@starknet-io/get-starknet-discovery": "next",
+    "@starknet-io/get-starknet-wallet-standard": "^6.0.5",
+    "@starknet-io/types-js": "^0.10.3",
     "starknet": "next"
   },
   "devDependencies": {
