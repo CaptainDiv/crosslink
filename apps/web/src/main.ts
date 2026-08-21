@@ -4,19 +4,9 @@ import {
   fetchPoolWindow,
   scorePendingSend,
   PLAUSIBLE_SET_THIN_THRESHOLD,
-  type MeterResult,
   type PoolWindow,
-  type SignalResult,
 } from "@crosslink/meter";
-
-const USDC_DECIMALS = 6;
-
-function parseUsdc(input: string): bigint {
-  const [whole = "", frac = ""] = input.trim().split(".");
-  const fracPadded = (frac + "0".repeat(USDC_DECIMALS)).slice(0, USDC_DECIMALS);
-  const wholePart = whole === "" ? 0n : BigInt(whole);
-  return wholePart * 10n ** BigInt(USDC_DECIMALS) + BigInt(fracPadded || "0");
-}
+import { parseUsdc, renderResult } from "./meterUi.ts";
 
 function poolStatsEl(): HTMLElement {
   return document.getElementById("pool-stats") as HTMLElement;
@@ -46,29 +36,6 @@ function renderPoolStats(window: PoolWindow): void {
   `;
 }
 
-function signalCard(signal: SignalResult): string {
-  return `
-    <div class="signal-card signal-${signal.status}">
-      <div class="signal-status">${signal.status.replace("_", " ")}</div>
-      <div class="signal-headline">${signal.headline}</div>
-      <div class="signal-detail">${signal.detail}</div>
-    </div>
-  `;
-}
-
-function renderResult(result: MeterResult): void {
-  resultEl().innerHTML = `
-    <div class="verdict verdict-${result.verdict}">
-      <div class="verdict-label">${result.verdict.replace("_", " ")}</div>
-      <div class="verdict-headline">${result.headline}</div>
-      <div class="verdict-detail">${result.detail}</div>
-    </div>
-    <div class="signal-grid">
-      ${result.signals.map(signalCard).join("")}
-    </div>
-  `;
-}
-
 async function main(): Promise<void> {
   const provider = createProvider();
   let window: PoolWindow;
@@ -92,7 +59,7 @@ async function main(): Promise<void> {
       ? Math.floor(new Date(fundedAtInput.value).getTime() / 1000)
       : undefined;
     const result = scorePendingSend(window, { amount, fundedAt });
-    renderResult(result);
+    renderResult(resultEl(), result);
   };
 
   form.addEventListener("submit", (event) => {
