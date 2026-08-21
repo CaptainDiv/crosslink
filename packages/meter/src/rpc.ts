@@ -15,12 +15,15 @@ const OPEN_NOTE_CREATED_SELECTOR = hash.getSelectorFromName("OpenNoteCreated");
 const toHex = (value: bigint): string => `0x${value.toString(16)}`;
 
 /**
- * Public SN_MAIN endpoint by default — no key required, verified working
- * against the live pool. Pass an explicit nodeUrl (e.g. a private RPC) to
- * override; the deployed page never does, so no secret ships client-side.
+ * Public, no-key-required mainnet RPC. Passed explicitly (never the "SN_MAIN"
+ * sentinel) so starknet.js doesn't log "Using default public node url,
+ * please provide nodeUrl in provider options!". The deployed page uses this
+ * default, so no secret ships client-side.
  */
-export function createProvider(nodeUrl?: string): RpcProvider {
-  return new RpcProvider(nodeUrl ? { nodeUrl } : { nodeUrl: "SN_MAIN" });
+export const DEFAULT_RPC_URL = "https://rpc.starknet.lava.build";
+
+export function createProvider(nodeUrl: string = DEFAULT_RPC_URL): RpcProvider {
+  return new RpcProvider({ nodeUrl });
 }
 
 interface RawEvent {

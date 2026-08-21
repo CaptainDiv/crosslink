@@ -18,8 +18,8 @@ const hasRealKey = configuredUrl !== undefined && !configuredUrl.includes("YOUR_
 if (!hasRealKey) {
   console.log(
     "STARKNET_RPC in .env is still the placeholder — falling back to " +
-      "starknet.js's bundled public mainnet node. This is also what the " +
-      "deployed page uses, so this is the realistic check.",
+      "packages/meter's default public RPC (rpc.starknet.lava.build). This " +
+      "is also what the deployed page uses, so this is the realistic check.",
   );
 }
 

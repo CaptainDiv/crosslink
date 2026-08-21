@@ -10,7 +10,7 @@ export {
   TIMING_SAFETY_MARGIN_SECONDS,
   USDC_TOKEN_ADDRESS,
 } from "./constants.ts";
-export { createProvider, fetchPoolWindow } from "./rpc.ts";
+export { createProvider, DEFAULT_RPC_URL, fetchPoolWindow } from "./rpc.ts";
 export { scorePendingSend } from "./score.ts";
 export type {
   Candidate,
