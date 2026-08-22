@@ -387,31 +387,88 @@ footer {
   margin-left: 0.5rem;
 }
 
-.demo-columns {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.25rem;
+.demo-card-section {
   margin-bottom: 1.5rem;
 }
 
-.demo-column {
+.demo-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.demo-toggle-row h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.privacy-switch {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.privacy-switch input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.privacy-switch-track {
+  position: relative;
+  width: 2.75rem;
+  height: 1.5rem;
+  background: var(--flagged);
+  border-radius: 999px;
+  transition: background-color 0.15s ease;
+  flex-shrink: 0;
+}
+
+.privacy-switch-track::before {
+  content: "";
+  position: absolute;
+  top: 0.15rem;
+  left: 0.15rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.15s ease;
+}
+
+.privacy-switch input:checked + .privacy-switch-track {
+  background: var(--clear);
+}
+
+.privacy-switch input:checked + .privacy-switch-track::before {
+  transform: translateX(1.25rem);
+}
+
+.privacy-switch input:focus-visible + .privacy-switch-track {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.privacy-switch-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.demo-card {
   background: var(--surface);
-  border: 2px solid var(--border);
+  border: 2px solid var(--flagged);
   border-radius: 0.75rem;
   padding: 1.25rem;
+  margin-top: 0.75rem;
+  transition: border-color 0.15s ease;
 }
 
-.demo-column--public {
-  border-color: var(--flagged);
-}
-
-.demo-column--private {
+.demo-card--private {
   border-color: var(--clear);
-}
-
-.demo-column h2 {
-  margin-top: 0;
-  font-size: 1.1rem;
 }
 
 .demo-field {

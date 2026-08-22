@@ -47,50 +47,32 @@
         <div id="depth-result"></div>
       </section>
 
-      <section class="demo-columns">
-        <div class="demo-column demo-column--public">
-          <h2>🔓 Privacy off</h2>
-          <p class="section-note">A standard public transfer. Anyone watching sees all three.</p>
-          <div class="demo-field">
-            <span class="demo-field-label">Sender</span>
-            <span id="public-sender" class="demo-field-value"></span>
-          </div>
-          <div class="demo-field">
-            <span class="demo-field-label">Recipient</span>
-            <span id="public-recipient" class="demo-field-value"></span>
-          </div>
-          <div class="demo-field">
-            <span class="demo-field-label">Amount</span>
-            <span id="public-amount" class="demo-field-value"></span>
-          </div>
-          <div class="demo-field">
-            <span class="demo-field-label">Tx</span>
-            <span id="public-tx" class="demo-field-value"></span>
-          </div>
+      <section class="wallet-section demo-card-section">
+        <div class="demo-toggle-row">
+          <h2>The payment</h2>
+          <label class="privacy-switch">
+            <input id="privacy-toggle" type="checkbox" />
+            <span class="privacy-switch-track" aria-hidden="true"></span>
+            <span id="privacy-switch-label" class="privacy-switch-label">Send privately</span>
+          </label>
         </div>
-
-        <div class="demo-column demo-column--private">
-          <h2>🔒 Privacy on</h2>
-          <p class="section-note">
-            Through Crosslink. The on-chain sender is a rotating relayer, not the payer —
-            attribute activity from the pool's <code>Deposit</code> event, never the tx
-            sender.
-          </p>
+        <p id="demo-card-note" class="section-note"></p>
+        <div id="demo-card" class="demo-card">
           <div class="demo-field">
             <span class="demo-field-label">Sender</span>
-            <span id="private-sender" class="demo-field-value"></span>
+            <span id="demo-sender" class="demo-field-value"></span>
           </div>
           <div class="demo-field">
             <span class="demo-field-label">Recipient</span>
-            <span class="demo-field-value demo-redacted">🔒 encrypted note</span>
+            <span id="demo-recipient" class="demo-field-value"></span>
           </div>
           <div class="demo-field">
             <span class="demo-field-label">Amount</span>
-            <span class="demo-field-value demo-redacted">🔒 encrypted note</span>
+            <span id="demo-amount-value" class="demo-field-value"></span>
           </div>
           <div class="demo-field">
             <span class="demo-field-label">Tx</span>
-            <span id="private-tx" class="demo-field-value"></span>
+            <span id="demo-tx" class="demo-field-value"></span>
           </div>
         </div>
       </section>

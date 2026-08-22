@@ -1,6 +1,15 @@
-import type { MeterResult, SignalResult } from "@crosslink/meter";
+import type { MeterResult, SignalId, SignalResult, Verdict } from "@crosslink/meter";
 
 const USDC_DECIMALS = 6;
+
+// The verdict banner already restates one signal's own headline/detail verbatim
+// (see packages/meter/src/score.ts:pickVerdict) — render that signal's card only
+// once, as the banner, not a second time in the grid below it.
+const VERDICT_SIGNAL_ID: Partial<Record<Verdict, SignalId>> = {
+  too_soon: "timing_correlation",
+  thin_pool: "plausible_set",
+  distinctive_amount: "amount_uniqueness",
+};
 
 export function parseUsdc(input: string): bigint {
   const [whole = "", frac = ""] = input.trim().split(".");
@@ -20,6 +29,8 @@ export function signalCard(signal: SignalResult): string {
 }
 
 export function renderResult(target: HTMLElement, result: MeterResult): void {
+  const verdictSignalId = VERDICT_SIGNAL_ID[result.verdict];
+  const gridSignals = result.signals.filter((s) => s.id !== verdictSignalId);
   target.innerHTML = `
     <div class="verdict verdict-${result.verdict}">
       <div class="verdict-label">${result.verdict.replace("_", " ")}</div>
@@ -27,7 +38,7 @@ export function renderResult(target: HTMLElement, result: MeterResult): void {
       <div class="verdict-detail">${result.detail}</div>
     </div>
     <div class="signal-grid">
-      ${result.signals.map(signalCard).join("")}
+      ${gridSignals.map(signalCard).join("")}
     </div>
   `;
 }

@@ -20,10 +20,13 @@ const PUBLIC_TX_HASH: string | null =
 const PRIVATE_TX_HASH: string | null =
   "0x4121124483d1259124dc1f50b3a6e9771a07061dc80bfafd3e6a984fe19de46";
 
-// Illustrative addresses only — not real wallets.
-const PUBLIC_SENDER = "0x04a7…e3f1 (placeholder)";
-const PUBLIC_RECIPIENT = "0x0629…9ab4 (placeholder)";
-const RELAYER_ADDRESS = "0x0157…c2d0 (placeholder, rotates per transaction)";
+// Real addresses, read from the two transactions above via starknet_getTransactionReceipt /
+// starknet_getTransactionByHash — not illustrative placeholders.
+const PUBLIC_SENDER = "0x0276c6131e74e41e2f1d6dfd0e59792b4f7fa5de457bb99cbc66297ee7c709ee";
+// USDC Transfer event `to`, PUBLIC_TX_HASH.
+const PUBLIC_RECIPIENT = "0x019252b1deef483477c4d30cfcc3e5ed9c82fafea44669c182a45a01b4fdb97a";
+// sender_address of PRIVATE_TX_HASH itself — the relayer that submitted it, not the payer.
+const RELAYER_ADDRESS = "0x01703d22f8415395dfcfa3c810ab333e3198894009c521556c764590622f2a67";
 
 const DEPTH_SLIDER_FLOOR_MAX = 200;
 
@@ -36,6 +39,44 @@ function renderHash(target: HTMLElement, hash: string | null): void {
     hash === null
       ? `<span class="hash-badge">PLACEHOLDER</span>`
       : `<a href="https://voyager.online/tx/${hash}" target="_blank" rel="noopener noreferrer">${hash.slice(0, 10)}…${hash.slice(-6)}</a>`;
+}
+
+function truncateAddr(addr: string): string {
+  return `${addr.slice(0, 8)}…${addr.slice(-6)}`;
+}
+
+function renderDemoCard(isPrivate: boolean, amountLabel: string): void {
+  const card = el<HTMLElement>("demo-card");
+  const note = el<HTMLElement>("demo-card-note");
+  const senderEl = el<HTMLElement>("demo-sender");
+  const recipientEl = el<HTMLElement>("demo-recipient");
+  const amountEl = el<HTMLElement>("demo-amount-value");
+  const txEl = el<HTMLElement>("demo-tx");
+
+  card.classList.toggle("demo-card--private", isPrivate);
+  recipientEl.classList.toggle("demo-redacted", isPrivate);
+  amountEl.classList.toggle("demo-redacted", isPrivate);
+
+  if (isPrivate) {
+    note.textContent =
+      "Through Crosslink. The on-chain sender is a rotating relayer, not the payer — attribute " +
+      "activity from the pool's Deposit event, never the tx sender. Recipient and amount live inside " +
+      "an encrypted note.";
+    senderEl.textContent = truncateAddr(RELAYER_ADDRESS);
+    senderEl.title = RELAYER_ADDRESS;
+    recipientEl.textContent = "🔒 encrypted note";
+    recipientEl.removeAttribute("title");
+    amountEl.textContent = "🔒 encrypted note";
+    renderHash(txEl, PRIVATE_TX_HASH);
+  } else {
+    note.textContent = "A standard public transfer. Anyone watching the chain sees all four fields below.";
+    senderEl.textContent = truncateAddr(PUBLIC_SENDER);
+    senderEl.title = PUBLIC_SENDER;
+    recipientEl.textContent = truncateAddr(PUBLIC_RECIPIENT);
+    recipientEl.title = PUBLIC_RECIPIENT;
+    amountEl.textContent = amountLabel;
+    renderHash(txEl, PUBLIC_TX_HASH);
+  }
 }
 
 /**
@@ -77,13 +118,17 @@ async function main(): Promise<void> {
   const depthReadoutEl = el<HTMLElement>("depth-readout");
   const depthMarkerEl = el<HTMLElement>("depth-marker");
   const depthResultEl = el<HTMLElement>("depth-result");
-  const publicAmountEl = el<HTMLElement>("public-amount");
+  const privacyToggle = el<HTMLInputElement>("privacy-toggle");
+  const privacySwitchLabelEl = el<HTMLElement>("privacy-switch-label");
 
-  el<HTMLElement>("public-sender").textContent = PUBLIC_SENDER;
-  el<HTMLElement>("public-recipient").textContent = PUBLIC_RECIPIENT;
-  el<HTMLElement>("private-sender").textContent = RELAYER_ADDRESS;
-  renderHash(el<HTMLElement>("public-tx"), PUBLIC_TX_HASH);
-  renderHash(el<HTMLElement>("private-tx"), PRIVATE_TX_HASH);
+  const updateDemoCard = (): void => {
+    privacySwitchLabelEl.textContent = privacyToggle.checked ? "Sending privately" : "Send privately";
+    renderDemoCard(privacyToggle.checked, `${amountInput.value || "0"} USDC`);
+  };
+  privacyToggle.addEventListener("change", updateDemoCard);
+  // Populate the payment card up front — it's independent of the live pool RPC
+  // fetch below and must still render if that fetch fails.
+  updateDemoCard();
 
   let window: PoolWindow;
   try {
@@ -102,7 +147,6 @@ async function main(): Promise<void> {
 
   const rescoreLive = (): number => {
     const amount = parseUsdc(amountInput.value || "0");
-    publicAmountEl.textContent = `${amountInput.value || "0"} USDC`;
     const result = scorePendingSend(window, { amount });
     renderResult(liveResultEl, result);
     const plausibleCount = result.signals.find((s) => s.id === "plausible_set")?.value ?? 0;
@@ -126,6 +170,7 @@ async function main(): Promise<void> {
   amountInput.addEventListener("input", () => {
     rescoreLive();
     rescoreDepth();
+    updateDemoCard();
   });
   depthSlider.addEventListener("input", () => {
     sliderTouched = true;
