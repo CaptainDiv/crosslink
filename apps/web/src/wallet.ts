@@ -155,38 +155,68 @@ async function connectWallet(wallet: WalletWithStarknetFeatures): Promise<void> 
   }
 }
 
+// A page's own script running and a wallet extension's content script
+// injecting are two independent, unsynchronized processes with no ordering
+// guarantee either way - confirmed on this page specifically: getWallets()
+// still returned 0 wallets 17s after load with Ready installed and unlocked,
+// and it never recovered, because nothing ever re-checked. createStore()'s
+// wallet-standard discovery is event-driven and persistent (store.subscribe
+// below covers it), but its legacy window.starknet* scan
+// (registerInjectedWalletDiscovery, for wallets that only set
+// window.starknet_<id> rather than dispatching wallet-standard events) runs
+// exactly once, synchronously, at createStore() time. store._refreshInjectedWallets()
+// re-runs that same scan - retried here on a backoff instead of trusting one
+// synchronous read.
+const RETRY_DELAYS_MS = [500, 1500, 3000, 6000];
+
+function logWindowStarknet(label: string): void {
+  const keys = Object.getOwnPropertyNames(window).filter((k) => k.startsWith("starknet"));
+  console.log(
+    `[wallet-detect] ${label} — window.starknet:`,
+    (window as unknown as { starknet?: unknown }).starknet,
+    "| window keys starting with 'starknet':",
+    keys,
+  );
+}
+
 async function renderWalletList(): Promise<void> {
   const listEl = document.getElementById("wallet-list") as HTMLElement;
   const store = createStore();
-  const wallets = store.getWallets();
-  // Diagnostic only, no rendering change: createStore()/getWallets() is a
-  // synchronous, one-shot read of an inherently async, event-driven registry
-  // (see @starknet-io/get-starknet-discovery's store.ts/standard-wallet.ts) -
-  // this store.subscribe() call exists purely so a late wallet-standard
-  // registration is visible in the console, since the UI below never
-  // re-checks after this first read.
-  console.log(
-    `[wallet-detect] initial getWallets() at ${performance.now().toFixed(0)}ms: ${wallets.length} wallet(s)`,
-    wallets.map((w) => w.name),
-  );
+
+  const renderWallets = (wallets: readonly WalletWithStarknetFeatures[]): void => {
+    listEl.innerHTML = "";
+    for (const wallet of wallets) {
+      const item = document.createElement("button");
+      item.type = "button";
+      item.className = "wallet-list-item";
+      item.textContent = wallet.name;
+      item.addEventListener("click", () => void connectWallet(wallet));
+      listEl.appendChild(item);
+    }
+  };
+
   store.subscribe((updated) => {
-    console.log(
-      `[wallet-detect] store changed at ${performance.now().toFixed(0)}ms (after initial render): now ${updated.length} wallet(s)`,
-      updated.map((w) => w.name),
-    );
+    console.log(`[wallet-detect] subscribe fired: ${updated.length} wallet(s)`, updated.map((w) => w.name));
+    if (updated.length > 0) renderWallets(updated);
   });
-  if (wallets.length === 0) {
-    listEl.innerHTML = "<p>No Starknet wallet extension detected.</p>";
-    return;
-  }
-  listEl.innerHTML = "";
-  for (const wallet of wallets) {
-    const item = document.createElement("button");
-    item.type = "button";
-    item.className = "wallet-list-item";
-    item.textContent = wallet.name;
-    item.addEventListener("click", () => void connectWallet(wallet));
-    listEl.appendChild(item);
+
+  logWindowStarknet("t=0ms");
+  const initial = store.getWallets();
+  console.log(`[wallet-detect] initial getWallets() at 0ms: ${initial.length} wallet(s)`, initial.map((w) => w.name));
+  if (initial.length > 0) renderWallets(initial);
+
+  for (const delay of RETRY_DELAYS_MS) {
+    setTimeout(() => {
+      logWindowStarknet(`t=${delay}ms`);
+      store._refreshInjectedWallets();
+      const wallets = store.getWallets();
+      console.log(`[wallet-detect] retry at ${delay}ms: ${wallets.length} wallet(s)`, wallets.map((w) => w.name));
+      if (wallets.length > 0) {
+        renderWallets(wallets);
+      } else if (delay === RETRY_DELAYS_MS[RETRY_DELAYS_MS.length - 1]) {
+        listEl.innerHTML = "<p>No Starknet wallet extension detected.</p>";
+      }
+    }, delay);
   }
 }
 
