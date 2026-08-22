@@ -72,6 +72,13 @@ body {
   padding: 2.5rem 1.25rem 4rem;
 }
 
+/* The Proof page's receipts table needs more than 720px to breathe across six
+   columns. One exception, scoped to that page's own <main>, same pattern as
+   #live-result's larger verdict card below — not a general layout change. */
+.page--wide {
+  max-width: 960px;
+}
+
 .site-nav {
   display: flex;
   gap: 1.25rem;
@@ -540,6 +547,47 @@ footer {
   margin-left: 0.5rem;
 }
 
+/* The one pill allowed to look "good" — it links to an actual mainnet hash
+   rather than asserting a privacy verdict, so --clear is honest here even
+   though verdict colors are otherwise reserved for verdicts. */
+.hypothetical-tag.tag-real {
+  border-color: var(--clear);
+  color: var(--clear);
+}
+
+/* Homepage invariant badge — a checkable fact, not a verdict, so it shares
+   .hypothetical-tag's neutral hairline register rather than any verdict
+   color. Block-level, not inline, and not margined against a sibling tag. */
+.invariant-badge {
+  display: inline-block;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  border-radius: var(--radius-sm);
+  padding: 0.2rem 0.65rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: var(--label-tracking);
+  font-weight: 600;
+  margin: 0 0 1.5rem;
+}
+
+/* Proof page's "guardrail fired correctly" meta-badge — answers a different
+   question than the verdict card under it (tool worked as designed, not
+   "privacy is currently weak"), so it gets --clear even sitting above a
+   --flagged verdict card. Conflating the two would misrepresent one of them. */
+.guardrail-badge {
+  display: inline-block;
+  border: 1px solid var(--clear);
+  color: var(--clear);
+  border-radius: var(--radius-sm);
+  padding: 0.2rem 0.65rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: var(--label-tracking);
+  font-weight: 600;
+  margin: 0 0 0.75rem;
+}
+
 .demo-card-section {
   margin-bottom: 1.5rem;
 }
@@ -688,6 +736,137 @@ footer {
   border-radius: var(--radius);
   background: var(--surface);
   animation: skeleton-pulse 1.4s ease-in-out infinite;
+}
+
+/* Proof page receipts table — extends .tx-log's flat hairline-row language
+   into a table. No zebra striping, no shadows, same row weight as .tx-log li. */
+.receipts-table-wrap {
+  overflow-x: auto;
+  margin-bottom: 2rem;
+}
+
+.receipts-table {
+  width: 100%;
+  min-width: 640px;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.receipts-table th,
+.receipts-table td {
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-mono);
+  overflow-wrap: anywhere;
+}
+
+.receipts-table th {
+  color: var(--text-dim);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: var(--label-tracking);
+  font-weight: 600;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.receipts-table td:first-child {
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.receipts-table a {
+  color: var(--accent);
+}
+
+/* Status column is a receipt, not a verdict — deliberately not --flagged or
+   --clear text. A confirmed tx isn't a privacy judgment; the dot alone
+   carries the "confirmed" signal so the column doesn't start reading like a
+   verdict color. */
+.receipt-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--text-dim);
+}
+
+.receipt-status::before {
+  content: "";
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--clear);
+  flex-shrink: 0;
+}
+
+/* Numbered walkthrough steps — reuses .signal-card's bordered-block shape;
+   left edge is neutral until active, then --accent. No animation on the
+   border transition beyond the existing 0.15s color-change convention. */
+.walkthrough-step {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.85rem 1rem;
+  margin-bottom: 0.75rem;
+  transition: border-color 0.15s ease;
+}
+
+.walkthrough-step.step-active {
+  border-left-color: var(--accent);
+}
+
+.walkthrough-step.step-done {
+  border-left-color: var(--clear);
+}
+
+.walkthrough-step-number {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  letter-spacing: var(--label-tracking);
+}
+
+.walkthrough-step-title {
+  font-weight: 600;
+  margin: 0.2rem 0 0.3rem;
+}
+
+.walkthrough-step-detail {
+  font-size: 0.9rem;
+  color: var(--text-dim);
+}
+
+/* Re-verify live button — idle/pending/done are label + timestamp changes,
+   not a spinner graphic; the disabled state already dims via the existing
+   .button-row button:disabled rule. */
+.last-verified {
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  font-family: var(--font-mono);
+  margin-top: 0.5rem;
+}
+
+pre {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  margin: 0 0 1.25rem;
+}
+
+code {
+  font-family: var(--font-mono);
+}
+
+:not(pre) > code {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.1rem 0.35rem;
+  font-size: 0.9em;
 }
 
 @media (max-width: 640px) {
