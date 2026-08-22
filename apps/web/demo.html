@@ -44,7 +44,7 @@
           <input id="depth-slider" type="range" min="0" max="200" step="1" />
         </label>
         <div id="depth-marker" class="status-line"></div>
-        <div id="depth-result"></div>
+        <div id="depth-result" aria-live="polite"></div>
       </section>
 
       <section class="wallet-section demo-card-section">
@@ -57,7 +57,7 @@
           </label>
         </div>
         <p id="demo-card-note" class="section-note"></p>
-        <div id="demo-card" class="demo-card">
+        <div id="demo-card" class="demo-card" aria-live="polite">
           <div class="demo-field">
             <span class="demo-field-label">Sender</span>
             <span id="demo-sender" class="demo-field-value"></span>

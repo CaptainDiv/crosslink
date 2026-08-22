@@ -165,7 +165,8 @@ async function renderWalletList(): Promise<void> {
   }
   listEl.innerHTML = "";
   for (const wallet of wallets) {
-    const item = document.createElement("div");
+    const item = document.createElement("button");
+    item.type = "button";
     item.className = "wallet-list-item";
     item.textContent = wallet.name;
     item.addEventListener("click", () => void connectWallet(wallet));
