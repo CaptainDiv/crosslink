@@ -1,0 +1,14 @@
+{
+  // Must live in api/, not as a differently-named config in apps/web: Vercel's Node
+  // builder resolves the tsconfig nearest the entrypoint, so it picks this up when
+  // compiling api/score.ts. Pointed at a config elsewhere it silently used
+  // apps/web/tsconfig.json — which has types: [] for the browser code — and the
+  // function failed to invoke with "Cannot find name 'process'".
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["ES2023", "DOM"],
+    "types": ["node"],
+    "noEmit": true
+  },
+  "include": ["."]
+}
