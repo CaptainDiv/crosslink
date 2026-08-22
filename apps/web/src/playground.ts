@@ -34,6 +34,20 @@ function el<T extends HTMLElement>(id: string): T {
   return document.getElementById(id) as T;
 }
 
+// A live log of what actually happened on this page, not a scripted sequence
+// — each entry fires from the same handlers already driving the three steps,
+// so the log can never say something the page didn't really do.
+function appendLog(message: string): void {
+  const log = el<HTMLUListElement>("event-log");
+  const empty = document.getElementById("event-log-empty");
+  if (empty) empty.remove();
+  const li = document.createElement("li");
+  const time = new Date().toLocaleTimeString();
+  li.innerHTML = `<span class="mono">${time}</span> — ${message}`;
+  log.appendChild(li);
+  log.scrollTop = log.scrollHeight;
+}
+
 function renderHash(target: HTMLElement, hash: string | null): void {
   target.innerHTML =
     hash === null
@@ -121,14 +135,21 @@ async function main(): Promise<void> {
   const privacyToggle = el<HTMLInputElement>("privacy-toggle");
   const privacySwitchLabelEl = el<HTMLElement>("privacy-switch-label");
 
-  const updateDemoCard = (): void => {
+  const updateDemoCard = (logIt: boolean): void => {
     privacySwitchLabelEl.textContent = privacyToggle.checked ? "Sending privately" : "Send privately";
     renderDemoCard(privacyToggle.checked, `${amountInput.value || "0"} USDC`);
+    if (logIt) {
+      appendLog(
+        privacyToggle.checked
+          ? "Step 03 — switched to the private payment card (real tx)."
+          : "Step 03 — switched to the public payment card (real tx).",
+      );
+    }
   };
-  privacyToggle.addEventListener("change", updateDemoCard);
+  privacyToggle.addEventListener("change", () => updateDemoCard(true));
   // Populate the payment card up front — it's independent of the live pool RPC
   // fetch below and must still render if that fetch fails.
-  updateDemoCard();
+  updateDemoCard(false);
 
   let window: PoolWindow;
   try {
@@ -137,19 +158,24 @@ async function main(): Promise<void> {
     livePoolStatsEl.textContent = `Could not reach the pool via RPC: ${
       error instanceof Error ? error.message : String(error)
     }`;
+    appendLog("Step 01 — could not reach the live pool via RPC.");
     return;
   }
   livePoolStatsEl.innerHTML =
     `Live over blocks <span class="mono">${window.fromBlock.toLocaleString()}–${window.toBlock.toLocaleString()}</span>: ` +
     `<span class="mono">${window.usdcDeposits.length}</span> USDC deposits, ` +
     `<span class="mono">${window.usdcWithdrawals.length}</span> withdrawals.`;
+  appendLog(
+    `Step 01 — fetched the live pool window: ${window.usdcDeposits.length} USDC deposits, ${window.usdcWithdrawals.length} withdrawals.`,
+  );
 
   let sliderTouched = false;
 
-  const rescoreLive = (): number => {
+  const rescoreLive = (logIt: boolean): number => {
     const amount = parseUsdc(amountInput.value || "0");
     const result = scorePendingSend(window, { amount });
     renderResult(liveResultEl, result);
+    if (logIt) appendLog(`Step 01 — rescored $${amountInput.value || "0"} live: verdict "${result.verdict}".`);
     const plausibleCount = result.signals.find((s) => s.id === "plausible_set")?.value ?? 0;
     depthSlider.max = String(Math.max(DEPTH_SLIDER_FLOOR_MAX, plausibleCount + 50));
     depthMarkerEl.innerHTML = `Today's real depth for this amount: <span class="mono">${plausibleCount}</span> deposits.`;
@@ -159,27 +185,28 @@ async function main(): Promise<void> {
     return plausibleCount;
   };
 
-  const rescoreDepth = (): void => {
+  const rescoreDepth = (logIt: boolean): void => {
     const amount = parseUsdc(amountInput.value || "0");
     const depth = Number(depthSlider.value);
     depthReadoutEl.textContent = String(depth);
     const simulated = buildSimulatedWindow(window, depth, amount);
     const result = scorePendingSend(simulated, { amount });
     renderResult(depthResultEl, result);
+    if (logIt) appendLog(`Step 02 — simulated ${depth} deposits: verdict "${result.verdict}".`);
   };
 
   amountInput.addEventListener("input", () => {
-    rescoreLive();
-    rescoreDepth();
-    updateDemoCard();
+    rescoreLive(true);
+    rescoreDepth(true);
+    updateDemoCard(false);
   });
   depthSlider.addEventListener("input", () => {
     sliderTouched = true;
-    rescoreDepth();
+    rescoreDepth(true);
   });
 
-  rescoreLive();
-  rescoreDepth();
+  rescoreLive(false);
+  rescoreDepth(false);
 }
 
 main();

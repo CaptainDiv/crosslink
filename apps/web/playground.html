@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crosslink — Playground</title>
+  </head>
+  <body>
+    <main class="page">
+      <nav class="site-nav" aria-label="Pages">
+        <a href="index.html" class="nav-link">How it works</a>
+        <a href="playground.html" class="nav-link active" aria-current="page">Playground</a>
+        <a href="proof.html" class="nav-link">Proof</a>
+        <a href="docs.html" class="nav-link">Docs</a>
+        <a href="wallet.html" class="nav-link">Launch app</a>
+      </nav>
+      <header>
+        <h1>Playground</h1>
+        <p class="hero-claim">The same payment, scored three ways.</p>
+        <p class="tagline">
+          Two of the three steps below run against the live
+          <a
+            href="https://voyager.online/contract/0x040337b1af3c663e86e333bab5a4b28da8d4652a15a69beee2b677776ffe812a"
+            target="_blank"
+            rel="noopener noreferrer"
+            >STRK20 mainnet pool</a
+          >; one is intentionally simulated, and says so.
+        </p>
+      </header>
+
+      <section class="wallet-section">
+        <h2 class="hero-kicker">Event log</h2>
+        <ul id="event-log" class="tx-log">
+          <li id="event-log-empty">No events yet — interact with a step below.</li>
+        </ul>
+      </section>
+
+      <div id="step-1" class="walkthrough-step">
+        <div class="walkthrough-step-number">01</div>
+        <h2 class="walkthrough-step-title">
+          Score it live <span class="hypothetical-tag tag-real">Real</span>
+        </h2>
+        <div id="live-result" aria-live="polite"></div>
+        <label class="amount-label">
+          Payment amount (USDC)
+          <input id="demo-amount" type="number" min="0" step="0.01" value="247.50" />
+        </label>
+        <div id="live-pool-stats" class="status-line" aria-live="polite">Loading live pool data…</div>
+      </div>
+
+      <div id="step-2" class="walkthrough-step">
+        <div class="walkthrough-step-number">02</div>
+        <h2 class="walkthrough-step-title">
+          See what privacy actually depends on
+          <span class="hypothetical-tag">Simulated</span>
+        </h2>
+        <p class="walkthrough-step-detail">
+          Not today's real pool. This pool is thin right now, which is why the live score above
+          looks weak — privacy isn't a toggle, it's a function of how many other deposits you
+          could be hiding among. Drag to see the same payment scored against a deeper pool.
+        </p>
+        <label class="depth-label">
+          Simulated deposits ≥ this amount:
+          <span id="depth-readout"></span>
+          <input id="depth-slider" type="range" min="0" max="200" step="1" />
+        </label>
+        <div id="depth-marker" class="status-line"></div>
+        <div id="depth-result" aria-live="polite"></div>
+      </div>
+
+      <div id="step-3" class="walkthrough-step demo-card-section">
+        <div class="walkthrough-step-number">03</div>
+        <div class="demo-toggle-row">
+          <h2 class="walkthrough-step-title">
+            Compare the same payment, public vs private
+            <span class="hypothetical-tag tag-real">Real</span>
+          </h2>
+          <label class="privacy-switch">
+            <input id="privacy-toggle" type="checkbox" />
+            <span class="privacy-switch-track" aria-hidden="true"></span>
+            <span id="privacy-switch-label" class="privacy-switch-label">Send privately</span>
+          </label>
+        </div>
+        <p id="demo-card-note" class="walkthrough-step-detail"></p>
+        <div id="demo-card" class="demo-card" aria-live="polite">
+          <div class="demo-field">
+            <span class="demo-field-label">Sender</span>
+            <span id="demo-sender" class="demo-field-value"></span>
+          </div>
+          <div class="demo-field">
+            <span class="demo-field-label">Recipient</span>
+            <span id="demo-recipient" class="demo-field-value"></span>
+          </div>
+          <div class="demo-field">
+            <span class="demo-field-label">Amount</span>
+            <span id="demo-amount-value" class="demo-field-value"></span>
+          </div>
+          <div class="demo-field">
+            <span class="demo-field-label">Tx</span>
+            <span id="demo-tx" class="demo-field-value"></span>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <p>
+          Deposits, withdrawals, timing and open-note amounts are public. Sender, receiver, amount
+          and spent notes on a private transfer's in-pool leg are not. Step 02 scores synthetic
+          data — never a real transaction. Steps 01 and 03 are real:
+          <a href="proof.html">see these transactions on the Proof page →</a>. Apache-2.0. Built
+          for the STRK20 Private Sprint.
+        </p>
+      </footer>
+    </main>
+    <script type="module" src="/src/playground.ts"></script>
+  </body>
+</html>

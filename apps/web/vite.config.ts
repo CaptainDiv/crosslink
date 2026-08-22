@@ -16,8 +16,9 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, "index.html"),
         wallet: resolve(__dirname, "wallet.html"),
-        demo: resolve(__dirname, "demo.html"),
+        playground: resolve(__dirname, "playground.html"),
         proof: resolve(__dirname, "proof.html"),
+        docs: resolve(__dirname, "docs.html"),
       },
     },
   },

@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crosslink — Docs</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <main class="page">
+      <nav class="site-nav" aria-label="Pages">
+        <a href="index.html" class="nav-link">How it works</a>
+        <a href="playground.html" class="nav-link">Playground</a>
+        <a href="proof.html" class="nav-link">Proof</a>
+        <a href="docs.html" class="nav-link active" aria-current="page">Docs</a>
+        <a href="wallet.html" class="nav-link">Launch app</a>
+      </nav>
+      <header>
+        <h1>Docs</h1>
+        <p class="hero-claim">
+          When a protocol shows a user a privacy toggle, it's making a promise. This is how it
+          checks the promise is true before making it.
+        </p>
+      </header>
+
+      <section>
+        <h2>Hosted API</h2>
+        <p class="section-note">
+          The same scoring the pages run is available as a hosted endpoint. No install, no key,
+          open CORS, call it from anywhere:
+        </p>
+        <pre><code>curl 'https://crosslink-delta.vercel.app/api/score?amount=247.50'</code></pre>
+        <pre><code>{
+  "verdict": "thin_pool",
+  "headline": "Privacy is weak right now.",
+  "detail": "Only 3 deposit(s) in the window could explain this payout. The anonymity set is thin.",
+  "signals": [ /* all five, each with status and the number behind it */ ],
+  "poolWindow": { "fromBlock": 13593316, "toBlock": 13693316, "usdcDepositCount": 16, "…": "…" },
+  "meta": { "fetchedAt": "2026-08-22T14:11:14.326Z", "ageSeconds": 0, "stale": false }
+}</code></pre>
+        <p class="section-note">Five lines in front of your send button:</p>
+        <pre><code>const res = await fetch(`https://crosslink-delta.vercel.app/api/score?amount=${amount}`);
+const { verdict, headline } = await res.json();
+if (verdict !== "clear") {
+  showWarning(headline); // don't promise privacy the pool can't currently deliver
+}</code></pre>
+
+        <table class="receipts-table">
+          <thead>
+            <tr>
+              <th scope="col">Query</th>
+              <th scope="col">Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>amount</code></td>
+              <td>required, USDC, e.g. <code>247.50</code></td>
+            </tr>
+            <tr>
+              <td><code>fundedAt</code></td>
+              <td>
+                optional, unix seconds — supply it and the timing-correlation signal is evaluated
+                instead of skipped
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p class="section-note">
+          <code>verdict</code> is one of <code>clear</code>, <code>thin_pool</code>,
+          <code>distinctive_amount</code>, <code>too_soon</code>. Bad input is a <code>400</code>;
+          if the pool can't be read at all it's a <code>503</code>. If the RPC fails but a recent
+          window is cached, you get that window with <code>meta.stale: true</code> — it is always
+          labelled, never passed off as current.
+        </p>
+      </section>
+
+      <section>
+        <h2>npm package</h2>
+        <p class="section-note">Prefer it in-process? The package is the same code:</p>
+        <pre><code>npm install @crosslink/meter starknet</code></pre>
+        <pre><code>import { createProvider, fetchPoolWindow, scorePendingSend, parseUsdc } from "@crosslink/meter";
+
+const window = await fetchPoolWindow(createProvider());   // ~12s, cache it
+const result = scorePendingSend(window, { amount: parseUsdc("247.50") });</code></pre>
+        <p class="section-note">
+          <code>scorePendingSend</code> is pure and does no I/O, so fetch the window once and
+          score as many candidate amounts against it as you like. See
+          <a
+            href="https://github.com/CaptainDiv/crosslink/blob/main/packages/meter/README.md"
+            target="_blank"
+            rel="noopener noreferrer"
+            >packages/meter/README.md</a
+          >.
+        </p>
+        <p class="section-note">
+          Honest about what this endpoint is: one hackathon-scale function reading a public
+          Starknet RPC that is sometimes slow and sometimes fails. Responses are edge-cached for a
+          minute. If you need an availability guarantee, use the package directly or self-host the
+          function — it is forty lines of glue around the same public scoring code.
+        </p>
+      </section>
+
+      <footer>
+        <p>
+          Apache-2.0. Built for the STRK20 Private Sprint. Source:
+          <a
+            href="https://github.com/CaptainDiv/crosslink"
+            target="_blank"
+            rel="noopener noreferrer"
+            >github.com/CaptainDiv/crosslink</a
+          >.
+        </p>
+      </footer>
+    </main>
+  </body>
+</html>
