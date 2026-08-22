@@ -1,17 +1,52 @@
 {
   "name": "@crosslink/meter",
-  "version": "0.0.1",
-  "private": true,
+  "version": "0.1.0",
+  "description": "Scores a pending STRK20 private transfer against the live Starknet privacy pool and says when the privacy would be fake.",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CaptainDiv/crosslink.git",
+    "directory": "packages/meter"
+  },
+  "homepage": "https://github.com/CaptainDiv/crosslink/tree/main/packages/meter#readme",
+  "keywords": [
+    "starknet",
+    "strk20",
+    "privacy",
+    "anonymity-set",
+    "linkability"
+  ],
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
   },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "prepack": "npm run build",
+    "prepublishOnly": "npm test",
     "typecheck": "tsc --noEmit",
     "test": "node --test",
     "live-check": "node --experimental-strip-types scripts/live-check.mts"
   },
-  "dependencies": {
+  "peerDependencies": {
+    "starknet": "^10.4.0"
+  },
+  "devDependencies": {
     "starknet": "next"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

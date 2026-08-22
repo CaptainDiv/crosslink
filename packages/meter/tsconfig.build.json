@@ -1,0 +1,36 @@
+{
+  // Deliberately standalone — this does NOT extend ../../tsconfig.base.json, so the
+  // package builds with no build-time dependency on anything else in the monorepo.
+  // Options are duplicated from the base on purpose; that duplication is the point.
+  "compilerOptions": {
+    "strict": true,
+    "target": "ES2023",
+    "lib": ["ES2023"],
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "verbatimModuleSyntax": true,
+    "noUncheckedIndexedAccess": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+
+    // src/ imports nothing from node: — an empty `types` keeps it that way, so the
+    // published package stays usable in a browser or edge runtime, not just Node.
+    "types": [],
+
+    // The source imports siblings with explicit .ts specifiers ("./score.ts").
+    // allowImportingTsExtensions alone forbids emit (TS5096);
+    // rewriteRelativeImportExtensions (TS >= 5.7) rewrites them to .js on the way
+    // out, in both the JS and the .d.ts.
+    "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true,
+
+    "noEmit": false,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "rootDir": "src",
+    "outDir": "dist"
+  },
+  "include": ["src"]
+}
