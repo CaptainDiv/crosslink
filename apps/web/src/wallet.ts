@@ -159,6 +159,22 @@ async function renderWalletList(): Promise<void> {
   const listEl = document.getElementById("wallet-list") as HTMLElement;
   const store = createStore();
   const wallets = store.getWallets();
+  // Diagnostic only, no rendering change: createStore()/getWallets() is a
+  // synchronous, one-shot read of an inherently async, event-driven registry
+  // (see @starknet-io/get-starknet-discovery's store.ts/standard-wallet.ts) -
+  // this store.subscribe() call exists purely so a late wallet-standard
+  // registration is visible in the console, since the UI below never
+  // re-checks after this first read.
+  console.log(
+    `[wallet-detect] initial getWallets() at ${performance.now().toFixed(0)}ms: ${wallets.length} wallet(s)`,
+    wallets.map((w) => w.name),
+  );
+  store.subscribe((updated) => {
+    console.log(
+      `[wallet-detect] store changed at ${performance.now().toFixed(0)}ms (after initial render): now ${updated.length} wallet(s)`,
+      updated.map((w) => w.name),
+    );
+  });
   if (wallets.length === 0) {
     listEl.innerHTML = "<p>No Starknet wallet extension detected.</p>";
     return;
