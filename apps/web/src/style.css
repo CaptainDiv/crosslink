@@ -121,6 +121,21 @@ header h1 {
   color: var(--accent);
 }
 
+/* Homepage hero claim — one line, full-color (not dimmed like .tagline),
+   sitting between h1 and the invariant badge. The live meter result follows
+   immediately after; nothing decorative goes between them. */
+.hero-claim {
+  color: var(--text);
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin: 0 0 1rem;
+  max-width: 60ch;
+}
+
+.hero-claim a {
+  color: var(--accent);
+}
+
 .pool-stats {
   background: var(--surface);
   border: 1px solid var(--border);

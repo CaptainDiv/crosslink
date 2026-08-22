@@ -8,22 +8,26 @@
   <body>
     <main class="page">
       <nav class="site-nav" aria-label="Pages">
-        <a href="index.html" class="nav-link active" aria-current="page">Meter</a>
-        <a href="demo.html" class="nav-link">Demo</a>
-        <a href="wallet.html" class="nav-link">Wallet</a>
+        <a href="index.html" class="nav-link active" aria-current="page">How it works</a>
+        <a href="playground.html" class="nav-link">Playground</a>
+        <a href="proof.html" class="nav-link">Proof</a>
+        <a href="docs.html" class="nav-link">Docs</a>
+        <a href="wallet.html" class="nav-link">Launch app</a>
       </nav>
       <header>
         <h1>Linkability Meter</h1>
-        <p class="tagline">
-          Read-only. Scores a pending USDC payout against the live
+        <p class="hero-claim">
+          It scores a pending USDC payout against the live
           <a
             href="https://voyager.online/contract/0x040337b1af3c663e86e333bab5a4b28da8d4652a15a69beee2b677776ffe812a"
             target="_blank"
             rel="noopener noreferrer"
             >STRK20 mainnet pool</a
           >
-          — and says so when privacy would be fake.
+          — and blocks it when privacy would be fake.
         </p>
+        <span class="invariant-badge">No screening, no deposit.</span>
+        <p class="tagline">Read-only. No wallet required for this page.</p>
       </header>
 
       <section id="pool-stats" class="pool-stats" aria-live="polite">

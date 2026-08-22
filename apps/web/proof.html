@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crosslink — Proof</title>
+  </head>
+  <body>
+    <main class="page page--wide">
+      <nav class="site-nav" aria-label="Pages">
+        <a href="index.html" class="nav-link">How it works</a>
+        <a href="playground.html" class="nav-link">Playground</a>
+        <a href="proof.html" class="nav-link active" aria-current="page">Proof</a>
+        <a href="docs.html" class="nav-link">Docs</a>
+        <a href="wallet.html" class="nav-link">Launch app</a>
+      </nav>
+      <header>
+        <h1>Proof</h1>
+        <p class="hero-claim">
+          Three real transactions on mainnet, and a real refusal — not a screenshot of either.
+        </p>
+        <p class="tagline">
+          Receipts below are linked to
+          <a href="https://voyager.online/" target="_blank" rel="noopener noreferrer">Voyager</a>.
+          The negative proof re-runs the same scorer the meter uses, live, against the pool right
+          now.
+        </p>
+      </header>
+
+      <section>
+        <h2>Mainnet receipts</h2>
+        <div class="receipts-table-wrap">
+          <table class="receipts-table">
+            <thead>
+              <tr>
+                <th scope="col">Step</th>
+                <th scope="col">Block</th>
+                <th scope="col">Fee (STRK)</th>
+                <th scope="col">Status</th>
+                <th scope="col">Tx</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Registration (viewing key, via Ready's native Shield UI)</td>
+                <td>13,664,033</td>
+                <td>3.308599</td>
+                <td><span class="receipt-status">confirmed</span></td>
+                <td>
+                  <a
+                    href="https://voyager.online/tx/0x216c69f39fdc5fb64db33ac5344cee138a693a34062c2075e3a943d6eed9cfd"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >0x216c…9cfd</a
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td>Shield — 1.37 USDC deposit</td>
+                <td>13,664,304</td>
+                <td>2.851916</td>
+                <td><span class="receipt-status">confirmed</span></td>
+                <td>
+                  <a
+                    href="https://voyager.online/tx/0x201a72f8ded88051c57e1e2dfee39811f392ba7a6e37e82d2252b95f5f6e3e1"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >0x201a…e3e1</a
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td>Private transfer — no public leg</td>
+                <td>13,664,327</td>
+                <td>2.851916</td>
+                <td><span class="receipt-status">confirmed</span></td>
+                <td>
+                  <a
+                    href="https://voyager.online/tx/0x4121124483d1259124dc1f50b3a6e9771a07061dc80bfafd3e6a984fe19de46"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >0x4121…de46</a
+                  >
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="section-note">
+          No withdrawal leg yet — the outbound anonymizer step hasn't run against mainnet. This
+          table shows exactly what's happened, not a padded lifecycle. Fee is Starknet's
+          <code>actual_fee</code>, paid in STRK; Starknet receipts don't report gas.
+        </p>
+      </section>
+
+      <section>
+        <h2>Negative proofs</h2>
+        <p class="section-note">
+          The meter's job is to refuse when privacy would be fake, not just report good news. This
+          re-runs the same scorer as the meter above against a 10 USDC payout, live, right now — if
+          the refusal below is showing, it's today's actual mainnet pool state, not a scripted
+          example.
+        </p>
+        <div id="negative-proof"></div>
+        <div class="button-row">
+          <button id="reverify-btn" type="button">Re-verify live</button>
+        </div>
+        <p id="last-verified" class="last-verified"></p>
+      </section>
+
+      <footer>
+        <p>
+          Deposits, withdrawals, timing and open-note amounts are public. This page reads only that
+          public data — no wallet, no SDK, no proving. Apache-2.0. Built for the STRK20 Private
+          Sprint.
+        </p>
+      </footer>
+    </main>
+    <script type="module" src="/src/proof.ts"></script>
+  </body>
+</html>
