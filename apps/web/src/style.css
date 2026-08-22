@@ -8,6 +8,11 @@
   --clear: #3ecf8e;
   --flagged: #f5a623;
   --not-evaluated: #6b7180;
+  --btn-text: #0b0d12;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", Menlo, Consolas, monospace;
+  --radius-sm: 4px;
+  --radius: 6px;
+  --label-tracking: 0.08em;
   color-scheme: dark;
 }
 
@@ -18,6 +23,13 @@
     --border: #dde1ea;
     --text: #14161f;
     --text-dim: #565c70;
+    /* Darkened from the dark-mode values — the originals measure ~2:1 against
+       this mode's white surface, under WCAG's 3:1 non-text / 4.5:1 text
+       minimums. These land at ~4.6:1. */
+    --accent: #096cfd;
+    --clear: #218558;
+    --flagged: #a36907;
+    --btn-text: #ffffff;
     color-scheme: light;
   }
 }
@@ -36,6 +48,22 @@ body {
     "Segoe UI",
     sans-serif;
   line-height: 1.5;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .page {
@@ -61,7 +89,7 @@ header h1 {
 .pool-stats {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 0.75rem;
+  border-radius: var(--radius);
   padding: 1rem 1.25rem;
   margin-bottom: 1.5rem;
 }
@@ -82,7 +110,7 @@ header h1 {
   align-items: end;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 0.75rem;
+  border-radius: var(--radius);
   padding: 1.25rem;
   margin-bottom: 1.5rem;
 }
@@ -99,35 +127,50 @@ header h1 {
 .score-form input {
   background: var(--bg);
   border: 1px solid var(--border);
-  border-radius: 0.5rem;
+  border-radius: var(--radius-sm);
   padding: 0.5rem 0.65rem;
   color: var(--text);
   font-size: 1rem;
+  font-family: var(--font-mono);
 }
 
 .score-form button {
   background: var(--accent);
-  color: #0b0d12;
+  color: var(--btn-text);
   border: none;
-  border-radius: 0.5rem;
+  border-radius: var(--radius-sm);
   padding: 0.65rem 1.25rem;
   font-weight: 600;
   cursor: pointer;
   height: fit-content;
 }
 
+@keyframes verdict-enter {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .verdict {
-  border-radius: 0.75rem;
+  border-radius: var(--radius);
   padding: 1.25rem;
   margin-bottom: 1.25rem;
   border: 1px solid var(--border);
+  border-left-width: 4px;
+  animation: verdict-enter 180ms ease;
 }
 
 .verdict-label {
   font-size: 0.75rem;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: var(--label-tracking);
   color: var(--text-dim);
+  font-weight: 600;
 }
 
 .verdict-headline {
@@ -141,27 +184,28 @@ header h1 {
 }
 
 .verdict-clear {
-  border-color: var(--clear);
+  border-left-color: var(--clear);
 }
 
 .verdict-distinctive_amount,
 .verdict-thin_pool,
 .verdict-too_soon {
-  border-color: var(--flagged);
+  border-left-color: var(--flagged);
 }
 
 .signal-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 0.75rem;
 }
 
 .signal-card {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-left: 4px solid var(--not-evaluated);
-  border-radius: 0.5rem;
+  border-left: 3px solid var(--not-evaluated);
+  border-radius: var(--radius-sm);
   padding: 0.85rem 1rem;
+  animation: verdict-enter 180ms ease;
 }
 
 .signal-card.signal-clear {
@@ -175,8 +219,9 @@ header h1 {
 .signal-status {
   font-size: 0.7rem;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: var(--label-tracking);
   color: var(--text-dim);
+  font-weight: 600;
 }
 
 .signal-headline {
@@ -203,7 +248,7 @@ footer {
   background: color-mix(in srgb, var(--flagged) 15%, var(--surface));
   border: 1px solid var(--flagged);
   color: var(--flagged);
-  border-radius: 0.5rem;
+  border-radius: var(--radius-sm);
   padding: 0.6rem 0.9rem;
   font-weight: 600;
   font-size: 0.9rem;
@@ -212,7 +257,7 @@ footer {
 .wallet-section {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 0.75rem;
+  border-radius: var(--radius);
   padding: 1.25rem;
   margin-bottom: 1.5rem;
 }
@@ -246,10 +291,11 @@ footer {
 .wallet-form input {
   background: var(--bg);
   border: 1px solid var(--border);
-  border-radius: 0.5rem;
+  border-radius: var(--radius-sm);
   padding: 0.5rem 0.65rem;
   color: var(--text);
   font-size: 1rem;
+  font-family: var(--font-mono);
 }
 
 .button-row {
@@ -261,9 +307,9 @@ footer {
 
 .button-row button {
   background: var(--accent);
-  color: #0b0d12;
+  color: var(--btn-text);
   border: none;
-  border-radius: 0.5rem;
+  border-radius: var(--radius-sm);
   padding: 0.55rem 1.1rem;
   font-weight: 600;
   cursor: pointer;
@@ -285,7 +331,7 @@ footer {
   padding: 0.5rem 0.75rem;
   font-size: 0.85rem;
   color: var(--flagged);
-  border-radius: 0.25rem;
+  border-radius: var(--radius-sm);
 }
 
 .status-line {
@@ -306,7 +352,7 @@ footer {
   gap: 0.75rem;
   background: var(--bg);
   border: 1px solid var(--border);
-  border-radius: 0.5rem;
+  border-radius: var(--radius-sm);
   padding: 0.6rem 0.9rem;
   margin-bottom: 0.5rem;
   cursor: pointer;
@@ -350,10 +396,11 @@ footer {
 .amount-label input[type="number"] {
   background: var(--bg);
   border: 1px solid var(--border);
-  border-radius: 0.5rem;
+  border-radius: var(--radius-sm);
   padding: 0.5rem 0.65rem;
   color: var(--text);
   font-size: 1rem;
+  font-family: var(--font-mono);
 }
 
 .depth-label {
@@ -371,18 +418,20 @@ footer {
 }
 
 .explorer-section {
-  border-color: var(--flagged);
+  border-color: var(--border);
 }
 
 .hypothetical-tag {
   display: inline-block;
-  background: color-mix(in srgb, var(--flagged) 20%, transparent);
-  color: var(--flagged);
-  border-radius: 0.35rem;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  border-radius: var(--radius-sm);
   padding: 0.1rem 0.5rem;
   font-size: 0.7rem;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: var(--label-tracking);
+  font-weight: 600;
   vertical-align: middle;
   margin-left: 0.5rem;
 }
@@ -502,9 +551,34 @@ footer {
   display: inline-block;
   background: color-mix(in srgb, var(--not-evaluated) 30%, transparent);
   color: var(--text-dim);
-  border-radius: 0.35rem;
+  border-radius: var(--radius-sm);
   padding: 0.1rem 0.5rem;
   font-size: 0.75rem;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: var(--label-tracking);
+}
+
+/* Empty verdict containers (before the first renderResult() call — mid RPC
+   round-trip) get a pulsing placeholder instead of a blank gap, so the page
+   already looks alive at first paint. */
+@keyframes skeleton-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+#result:empty,
+#live-result:empty,
+#depth-result:empty,
+#transfer-verdict:empty {
+  display: block;
+  min-height: 4.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  animation: skeleton-pulse 1.4s ease-in-out infinite;
 }
