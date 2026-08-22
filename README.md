@@ -1,13 +1,17 @@
 # Crosslink
 
-Crosslink pays a third party in native USDC on their own chain from a shielded
-Starknet balance, so the funding source and the payout can't be linked on-chain. A
-Linkability Meter reads the live pool and blocks a send when the anonymity set is too
-thin, the amount too distinctive, or the timing too tight for that unlinkability to
-mean anything.
+Crosslink measures whether a private STRK20 payout is actually unlinkable, and blocks
+the send when it isn't. StarkWare's bridgeOutToWallet() already withdraws pool funds
+through an anonymizer contract and bridges them to a caller-chosen address on another
+chain — Crosslink doesn't invent that payout. What it adds is live measurement of
+whether the pool's current anonymity set is deep enough for that unlinkability to mean
+anything, enforced as a refusal to send when it's fake.
 
 Built for the STRK20 Private Sprint. Not audited. Read [PRIVACY.md](./PRIVACY.md)
 before trusting it with real funds.
+
+Scoring is available as a [hosted API](https://crosslink-delta.vercel.app/api/score)
+and an npm package — see [Integrate](#integrate) below.
 
 ## Live pages
 
