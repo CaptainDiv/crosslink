@@ -98,6 +98,10 @@ header h1 {
   margin: 0.25rem 0;
 }
 
+.pool-stats strong {
+  font-family: var(--font-mono);
+}
+
 .thin-pool-banner {
   color: var(--flagged);
   font-weight: 600;
@@ -320,8 +324,9 @@ footer {
   cursor: not-allowed;
 }
 
-.button-row button#transfer-send-anyway {
+.button-row button.button-danger {
   background: var(--flagged);
+  color: var(--btn-text);
 }
 
 .round-warning {
@@ -350,6 +355,23 @@ footer {
   white-space: pre-wrap;
 }
 
+/* wallet.html's status/preview lines are literal RPC/proof/tx-hash readouts
+   ("Dry run OK. Call entrypoint: transfer. Proof facts: 5.", "Submitted:
+   0xabc…") — monospace the whole line so it reads as a log, not prose.
+   Scoped to these specific containers rather than the shared .status-line/
+   .preview classes, since demo.html reuses those classes for mixed prose
+   that intentionally keeps its sentence text sans-serif (see demo.ts,
+   which already wraps just the numbers in <span class="mono">). */
+#connect-status,
+#register-status,
+#register-preview,
+#shield-preview,
+#transfer-preview {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  overflow-wrap: anywhere;
+}
+
 .wallet-list-item {
   display: flex;
   align-items: center;
@@ -376,6 +398,8 @@ footer {
 .tx-log li {
   border-bottom: 1px solid var(--border);
   padding: 0.5rem 0;
+  font-family: var(--font-mono);
+  overflow-wrap: anywhere;
 }
 
 .tx-log li:last-child {
