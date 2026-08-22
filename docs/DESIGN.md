@@ -144,7 +144,7 @@ Directly reuses `.tx-log`'s existing list styling (bordered rows, mono, link-col
 Each entry appended on step-advance; the CSS is unchanged, only the JS driving it is new.
 
 ### 4.8 Simulated vs. real labeling (Playground) — reuses `.hypothetical-tag`
-The depth-slider demo on the current `demo.html` already tags synthetic data with exactly this
+The depth-slider demo on `playground.html` (step 02) already tags synthetic data with exactly this
 pill (`SIMULATED`-equivalent). Extend the same tag to every walkthrough step: `SIMULATED` in the
 existing neutral hairline style, and a second variant `REAL` using `--clear` text instead of
 `--text-dim` — the one place in the walkthrough allowed to look "good," because it's linking to an

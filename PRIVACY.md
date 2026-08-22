@@ -17,7 +17,8 @@ out. Scored against the live pool, a typical payment currently has a plausible s
 about **3** other deposits. That's not meaningful privacy. Our meter's `thin_pool`
 verdict says so and blocks the send instead of showing a green check. Live counts:
 [meter](https://captaindiv.github.io/crosslink/) /
-[demo](https://captaindiv.github.io/crosslink/demo.html).
+[playground](https://captaindiv.github.io/crosslink/playground.html) /
+[proof](https://captaindiv.github.io/crosslink/proof.html).
 
 ## What we actually add
 

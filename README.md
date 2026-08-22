@@ -14,12 +14,16 @@ before trusting it with real funds.
 All three read the live mainnet pool directly via RPC — no backend, no wallet
 required except where noted.
 
-- [Linkability Meter](https://crosslink-delta.vercel.app/) — scores a pending send
+- [How it works](https://crosslink-delta.vercel.app/) — scores a pending send
   against the pool's current public state.
-- [Wallet API integration test](https://crosslink-delta.vercel.app/wallet.html) —
-  connect, shield, and private-transfer through a Starknet privacy wallet.
-- [Side-by-side demo](https://crosslink-delta.vercel.app/demo.html) — the same
-  payment shown twice, privacy off vs privacy on.
+- [Playground](https://crosslink-delta.vercel.app/playground.html) — the same
+  payment shown three ways: live-scored, depth-simulated, and side-by-side
+  (privacy off vs privacy on).
+- [Proof](https://crosslink-delta.vercel.app/proof.html) — the real mainnet
+  transactions as receipts, plus the meter's live refusal shown as a negative proof.
+- [Docs](https://crosslink-delta.vercel.app/docs.html) — API and npm integration.
+- [Launch app](https://crosslink-delta.vercel.app/wallet.html) — connect, shield,
+  and private-transfer through a Starknet privacy wallet.
 
 ## Mainnet transactions
 
