@@ -10,9 +10,15 @@ import {
 } from "@crosslink/meter";
 import { parseUsdc, renderResult } from "./meterUi.ts";
 
-// Swap these two for real mainnet tx hashes once run tomorrow — leave null until then.
-const PUBLIC_TX_HASH: string | null = null;
-const PRIVATE_TX_HASH: string | null = null;
+// Real mainnet transactions (2026-08-22), verified against the pool's own event log
+// before wiring in: PUBLIC_TX_HASH never touches the pool contract (plain USDC
+// transfer); PRIVATE_TX_HASH shows in-pool EncNoteCreated activity with no
+// external-address withdrawal. See strk20.json for the full set including
+// registration.
+const PUBLIC_TX_HASH: string | null =
+  "0x189599645a9f4b6b4e9faa9921e55c2a80070e1286ff11cf2e35d0282183882";
+const PRIVATE_TX_HASH: string | null =
+  "0x4121124483d1259124dc1f50b3a6e9771a07061dc80bfafd3e6a984fe19de46";
 
 // Illustrative addresses only — not real wallets.
 const PUBLIC_SENDER = "0x04a7…e3f1 (placeholder)";

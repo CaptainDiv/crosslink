@@ -1,5 +1,21 @@
 {
-  "transactions": [],
+  "transactions": [
+    {
+      "hash": "0x216c69f39fdc5fb64db33ac5344cee138a693a34062c2075e3a943d6eed9cfd",
+      "pool": "0x040337b1af3c663e86e333bab5a4b28da8d4652a15a69beee2b677776ffe812a",
+      "description": "Registration (viewing key) — bootstrapped via Ready's native Shield UI; the wallet API's strk20InvokeTransaction returns NOT_REGISTERED for a first-time account, see CLAUDE.md"
+    },
+    {
+      "hash": "0x201a72f8ded88051c57e1e2dfee39811f392ba7a6e37e82d2252b95f5f6e3e1",
+      "pool": "0x040337b1af3c663e86e333bab5a4b28da8d4652a15a69beee2b677776ffe812a",
+      "description": "Shield — 1.37 USDC deposit"
+    },
+    {
+      "hash": "0x4121124483d1259124dc1f50b3a6e9771a07061dc80bfafd3e6a984fe19de46",
+      "pool": "0x040337b1af3c663e86e333bab5a4b28da8d4652a15a69beee2b677776ffe812a",
+      "description": "Private transfer — no public leg"
+    }
+  ],
   "contracts": [],
   "demo_video": "",
   "demo_url": ""

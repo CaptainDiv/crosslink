@@ -73,6 +73,11 @@ Each bundles upstream pages verbatim. **Open the reference rather than recalling
 - After a failed submission, call `invalidateProofNonceCache()` before retrying.
 - Proof generation ~29s. Build UI around it.
 
+### Registration (Wallet API route)
+- **Registration cannot be done through the wallet API.** `strk20InvokeTransaction`/`strk20PrepareInvoke` return `NOT_REGISTERED` for an account with no on-chain viewing key, on both a plain deposit and a dry run. The starter kit's own reference implementation (`Akashneelesh/strk20-starter-kit`) does the identical `[{type:"deposit",...}]` call and has the same gap — this isn't a calldata bug on our side.
+- **Bootstrap via the wallet's own native Shield UI**, not our dapp. Verified on-chain: a real registration transaction is a relayer-submitted SNIP-9 `execute_from_outside_v2` call, paymaster-funded, that bundles `ViewingKeySet` and a `Deposit` atomically — a mechanism the documented `STRK20_ACTION` surface never exposes to third-party dapps.
+- **After that first native-UI registration, the wallet API works normally** — `strk20InvokeTransaction` for shield/transfer against an already-registered account behaves exactly as documented.
+
 ### Screening
 Every deposit is screened by FPI and verified on-chain. Self-hosted proving does not bypass it. A structurally valid deposit that reverts is screening first, everything else second.
 
