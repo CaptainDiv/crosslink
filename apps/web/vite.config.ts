@@ -4,8 +4,13 @@ import { defineConfig } from "vite";
 // GitHub Pages serves a project site (not a custom domain) at
 // https://<owner>.github.io/<repo>/ — the build output has to know that
 // prefix, or every asset URL resolves relative to the domain root instead.
+// Vercel (Root Directory: apps/web) serves this project from the domain
+// root, and sets VERCEL=1 in every build environment — a documented, stable
+// Vercel convention, more reliable to key off than guessing the host.
+const base = process.env.VERCEL ? "/" : "/crosslink/";
+
 export default defineConfig({
-  base: "/crosslink/",
+  base,
   build: {
     rollupOptions: {
       input: {
