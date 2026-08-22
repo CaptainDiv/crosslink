@@ -339,6 +339,10 @@ footer {
   font-size: 0.9rem;
 }
 
+.mono {
+  font-family: var(--font-mono);
+}
+
 .preview {
   margin-top: 0.75rem;
   font-size: 0.85rem;
@@ -393,6 +397,49 @@ footer {
   margin-bottom: 0.75rem;
 }
 
+.live-meter-hero {
+  padding: 0 0 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.hero-kicker {
+  margin: 0 0 0.5rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: var(--label-tracking);
+  font-weight: 600;
+  color: var(--text-dim);
+}
+
+/* The live verdict is the one element on this page a judge must see first —
+   scoped to this page's unique container ID, not a shared class, so
+   index.html's/wallet.html's identical .verdict markup (from the same
+   renderResult()) stays at normal size. */
+#live-result .verdict {
+  padding: 2rem 2rem 2.25rem;
+  border-left-width: 6px;
+  margin-bottom: 1.25rem;
+}
+
+#live-result .verdict-label {
+  font-size: 0.85rem;
+}
+
+#live-result .verdict-headline {
+  font-size: clamp(1.75rem, 4vw + 1rem, 3rem);
+  line-height: 1.15;
+  margin: 0.4rem 0 0.5rem;
+}
+
+#live-result .verdict-detail {
+  font-size: 1.05rem;
+  max-width: 60ch;
+}
+
+#live-result:empty {
+  min-height: 11rem;
+}
+
 .amount-label input[type="number"] {
   background: var(--bg);
   border: 1px solid var(--border);
@@ -415,6 +462,7 @@ footer {
 #depth-readout {
   color: var(--text);
   font-weight: 700;
+  font-family: var(--font-mono);
 }
 
 .explorer-section {
@@ -471,7 +519,7 @@ footer {
   position: relative;
   width: 2.75rem;
   height: 1.5rem;
-  background: var(--flagged);
+  background: var(--border);
   border-radius: 999px;
   transition: background-color 0.15s ease;
   flex-shrink: 0;
@@ -490,7 +538,7 @@ footer {
 }
 
 .privacy-switch input:checked + .privacy-switch-track {
-  background: var(--clear);
+  background: var(--accent);
 }
 
 .privacy-switch input:checked + .privacy-switch-track::before {
@@ -509,15 +557,17 @@ footer {
 
 .demo-card {
   background: var(--surface);
-  border: 2px solid var(--flagged);
-  border-radius: 0.75rem;
+  border: 1px solid var(--border);
+  border-left-width: 3px;
+  border-left-color: var(--border);
+  border-radius: var(--radius);
   padding: 1.25rem;
   margin-top: 0.75rem;
   transition: border-color 0.15s ease;
 }
 
 .demo-card--private {
-  border-color: var(--clear);
+  border-left-color: var(--accent);
 }
 
 .demo-field {
@@ -538,7 +588,7 @@ footer {
 }
 
 .demo-field-value {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: var(--font-mono);
   text-align: right;
 }
 

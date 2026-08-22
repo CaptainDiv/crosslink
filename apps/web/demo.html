@@ -20,14 +20,14 @@
         </p>
       </header>
 
-      <section class="wallet-section">
-        <h2>Live meter score</h2>
+      <section id="live-meter-section" class="live-meter-hero">
+        <h2 class="hero-kicker">Live meter score</h2>
+        <div id="live-result" aria-live="polite"></div>
         <label class="amount-label">
           Payment amount (USDC)
           <input id="demo-amount" type="number" min="0" step="0.01" value="247.50" />
         </label>
-        <div id="live-pool-stats" class="status-line">Loading live pool data…</div>
-        <div id="live-result"></div>
+        <div id="live-pool-stats" class="status-line" aria-live="polite">Loading live pool data…</div>
       </section>
 
       <section class="wallet-section explorer-section">

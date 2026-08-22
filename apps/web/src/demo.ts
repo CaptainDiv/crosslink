@@ -139,9 +139,10 @@ async function main(): Promise<void> {
     }`;
     return;
   }
-  livePoolStatsEl.textContent =
-    `Live over blocks ${window.fromBlock.toLocaleString()}–${window.toBlock.toLocaleString()}: ` +
-    `${window.usdcDeposits.length} USDC deposits, ${window.usdcWithdrawals.length} withdrawals.`;
+  livePoolStatsEl.innerHTML =
+    `Live over blocks <span class="mono">${window.fromBlock.toLocaleString()}–${window.toBlock.toLocaleString()}</span>: ` +
+    `<span class="mono">${window.usdcDeposits.length}</span> USDC deposits, ` +
+    `<span class="mono">${window.usdcWithdrawals.length}</span> withdrawals.`;
 
   let sliderTouched = false;
 
@@ -151,7 +152,7 @@ async function main(): Promise<void> {
     renderResult(liveResultEl, result);
     const plausibleCount = result.signals.find((s) => s.id === "plausible_set")?.value ?? 0;
     depthSlider.max = String(Math.max(DEPTH_SLIDER_FLOOR_MAX, plausibleCount + 50));
-    depthMarkerEl.textContent = `Today's real depth for this amount: ${plausibleCount} deposits.`;
+    depthMarkerEl.innerHTML = `Today's real depth for this amount: <span class="mono">${plausibleCount}</span> deposits.`;
     if (!sliderTouched) {
       depthSlider.value = String(plausibleCount);
     }
