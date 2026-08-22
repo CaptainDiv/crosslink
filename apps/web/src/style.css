@@ -614,6 +614,7 @@ footer {
 .demo-field-value {
   font-family: var(--font-mono);
   text-align: right;
+  overflow-wrap: anywhere;
 }
 
 .demo-redacted {
@@ -655,4 +656,30 @@ footer {
   border-radius: var(--radius);
   background: var(--surface);
   animation: skeleton-pulse 1.4s ease-in-out infinite;
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding: 1.5rem 1rem 3rem;
+  }
+
+  .demo-toggle-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .demo-field {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.15rem;
+  }
+
+  .demo-field-value {
+    text-align: left;
+  }
+
+  #live-result .verdict {
+    padding: 1.5rem 1.25rem 1.75rem;
+  }
 }
