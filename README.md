@@ -181,3 +181,4 @@ inherently async announcement) regardless of that answer.
 
 Apache-2.0. Full text in [`LICENSE`](./LICENSE).
 Mon Aug 24 22:58:37 UTC 2026
+Mon Aug 24 22:59:07 UTC 2026
